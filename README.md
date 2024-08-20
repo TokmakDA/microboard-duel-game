@@ -1,50 +1,61 @@
-# React + TypeScript + Vite
+# Тестовое для Microboard - "Дуэль"
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Задание
 
-Currently, two official plugins are available:
+### Реализуйте игру "Дуэль"
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+    •	Есть прямоугольное поле Canvas, на прямоугольном поле расположены фигуры — два круга. Круги представляют собой героев, которые сражаются друг с другом.
+    •	Герои двигаются по прямой вверх и вниз на противоположных сторонах экрана (как биты в арканоиде). По достижении края поля герой отталкивается и меняет направление движения.
+    •	Герои пользуются заклинаниями — стреляют друг в друга шариками поменьше.
+    •	Если герой встречает на своем пути курсор мыши, то он отталкивается от него как от границы поля
+    •	При соприкосновении с врагом, заклинание исчезает, а на табло засчитывается одно попадание.
+    •	Поле прямоугольное, выйти за границы нельзя
+    •	Если на героя кликнуть, то появляется менюшка, выполненная с помощью React, с помощью которой можно поменять цвет заклинаний, которые он кидает
 
-## Expanding the ESLint configuration
+    Для каждого героя есть два ползунка, которые настраивают частоту его стрельбы и скорость передвижения.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+    Реализация должна быть выполнена на чистом канвасе и реакте, без использования сторонних графических или игровых библиотек.
 
-- Configure the top-level `parserOptions` property like this:
+## Реализация
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+    •	Игровое поле и персонажи нарисованы с использованием HTML5 Canvas.
+    •	React используется для управления состоянием и создания интерфейса для настроек героев.
+    •	Для управления скоростью и частотой стрельбы каждого героя реализованы индивидуальные ползунки.
+    •	Столкновения героев с заклинаниями и курсором мыши обрабатываются с помощью расчетов на Canvas.
+    •	В игре реализована система учета очков при попадании заклинания в противника.
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Диплой
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+Тестовое задеплоено на Neylify
+[microboard-duel-game](https://microboard-duel-game.netlify.app/)
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## Стек
+
+- [React](https://reactjs.org/) - Библиотека для создания пользовательских интерфейсов.
+- [Vite](https://vitejs.dev/) - Быстрый инструмент сборки для разработки веб-приложений.
+- [TypeScript](https://www.typescriptlang.org/) - статическая типизация для JavaScript
+- [ESLint](https://eslint.org/) - Инструмент статического анализа кода для обнаружения ошибок.
+- [Prettier](https://prettier.io/) - Инструмент для форматирования кода
+- [Sass](https://sass-lang.com/) - Препроцессор CSS
+
+### Установка
+
+Для установки зависимостей выполните следующие команды:
+`npm install`/`npm i`
+
+### Запуск проекта
+
+Для запуска проекта выполните:
+`npm run dev`
+
+## Скрипты
+
+`npm run `
+
+- `dev`/`start` - Запуск сервера разработки и открытие браузера
+- `build` - Сборка для продакшена
+- `preview` - Локальный просмотр собранного проекта
+- `lint` - Проверка кода на соответствие стандартам с помощью ESLint.
+- `lint:fix` - Автоматическое исправление ошибок в коде с помощью ESLint.
+- `format` - Форматирование кода с помощью Prettier.
+- `type-check` - Проверка типов с помощью TypeScript без генерации файлов выходного кода.

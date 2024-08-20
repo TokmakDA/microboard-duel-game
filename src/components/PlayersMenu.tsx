@@ -1,13 +1,13 @@
-import React from 'react';
-import { Player } from '../types/types..ts';
+import type React from 'react';
+import type { Player } from '../types/types..ts';
 import './PlayersMenu.scss';
 
-type MenuProps = {
+interface MenuProps {
   player: Player;
   onSpellColorChange: (color: string) => void;
   onPlayerSpeedChange: (speed: number) => void;
   onCastSpeedChange: (frequency: number) => void;
-};
+}
 
 const PlayersMenu: React.FC<MenuProps> = ({
   player,

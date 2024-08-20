@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import Game from './components/Game';
 import s from './App.module.scss';
 

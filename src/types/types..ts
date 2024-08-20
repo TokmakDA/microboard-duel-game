@@ -23,7 +23,7 @@ export interface Spell {
 
 export interface GameState {
   players: Record<string, Player>;
-  spells: Spell[];
+  spells: Record<string, Spell>;
   lastShootTime: Record<string, number>;
   canvasSize: { width: number; height: number };
   playerRadius: number;

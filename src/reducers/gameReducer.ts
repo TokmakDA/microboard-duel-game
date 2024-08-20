@@ -1,4 +1,4 @@
-import { Action, GameState } from '../types/types..ts';
+import type { Action, GameState, Spell } from '../types/types..ts';
 
 export const createInitialState = (
   canvasWidth: number,
@@ -32,7 +32,7 @@ export const createInitialState = (
         speed: 2,
       },
     },
-    spells: [],
+    spells: {},
     lastShootTime: { '1': 0, '2': 0 },
     canvasSize: { width: canvasWidth, height: canvasHeight },
     playerRadius,
@@ -42,7 +42,7 @@ export const createInitialState = (
 
 export const gameReducer = (state: GameState, action: Action): GameState => {
   switch (action.type) {
-    case 'UPDATE_PLAYER_POSITION':
+    case 'UPDATE_PLAYER_POSITION': {
       const updatedPlayers = { ...state.players };
       Object.values(updatedPlayers).forEach((player) => {
         player.y += player.dy * player.direction;
@@ -54,8 +54,9 @@ export const gameReducer = (state: GameState, action: Action): GameState => {
         }
       });
       return { ...state, players: updatedPlayers };
+    }
 
-    case 'CHANGE_PLAYER_SPEED':
+    case 'CHANGE_PLAYER_SPEED': {
       return {
         ...state,
         players: {
@@ -67,10 +68,12 @@ export const gameReducer = (state: GameState, action: Action): GameState => {
           },
         },
       };
+    }
 
-    case 'SHOOT_SPELL':
+    case 'SHOOT_SPELL': {
       const { playerId } = action;
       const player = state.players[playerId];
+      const spellId = `${playerId}-${Date.now()}`;
       const spell = {
         x: player.x,
         y: player.y,
@@ -82,38 +85,50 @@ export const gameReducer = (state: GameState, action: Action): GameState => {
       };
       return {
         ...state,
-        spells: [...state.spells, spell],
+        spells: {
+          ...state.spells,
+          [spellId]: spell,
+        },
         lastShootTime: {
           ...state.lastShootTime,
           [playerId]: performance.now(),
         },
       };
+    }
+    case 'UPDATE_SPELLS': {
+      const updatedSpells: Record<string, Spell> = {};
+      // Сохраняем ID выстрелов, которые попали, для исключения повторного зачисления
+      const hitSpells = new Set();
+      const newState = { ...state };
 
-    case 'UPDATE_SPELLS':
-      const updatedSpells = state.spells.filter((spell) => {
+      Object.entries(state.spells).forEach(([spellId, spell]) => {
         spell.x += spell.dx;
         spell.y += spell.dy;
 
-        let hit = true;
-        Object.entries(state.players).forEach(([k, player]) => {
+        let isHit = false;
+        Object.entries(newState.players).forEach(([k, player]) => {
           if (
             spell.owner !== k &&
             Math.hypot(spell.x - player.x, spell.y - player.y) <
               player.radius + spell.radius
           ) {
-            if (hit) {
-              state.players[spell.owner].score += 1;
-              hit = false;
+            if (!hitSpells.has(spellId)) {
+              newState.players[spell.owner].score += 1;
+              hitSpells.add(spellId);
+              isHit = true;
             }
           }
         });
 
-        return hit && spell.x >= 0 && spell.x <= state.canvasSize.width;
+        if (!isHit && spell.x >= 0 && spell.x <= newState.canvasSize.width) {
+          updatedSpells[spellId] = spell;
+        }
       });
 
-      return { ...state, spells: updatedSpells };
+      return { ...newState, spells: updatedSpells };
+    }
 
-    case 'CHANGE_SPELL_COLOR':
+    case 'CHANGE_SPELL_COLOR': {
       return {
         ...state,
         players: {
@@ -124,8 +139,9 @@ export const gameReducer = (state: GameState, action: Action): GameState => {
           },
         },
       };
+    }
 
-    case 'CHANGE_SHOOT_INTERVAL':
+    case 'CHANGE_SHOOT_INTERVAL': {
       return {
         ...state,
         players: {
@@ -136,8 +152,8 @@ export const gameReducer = (state: GameState, action: Action): GameState => {
           },
         },
       };
-
-    case 'CHECK_MOUSE_COLLISION':
+    }
+    case 'CHECK_MOUSE_COLLISION': {
       const newPlayers = { ...state.players };
       const { mousePosition } = action;
 
@@ -153,9 +169,11 @@ export const gameReducer = (state: GameState, action: Action): GameState => {
         });
       }
       return { ...state, players: newPlayers };
+    }
 
-    case 'RESTART_GAME':
+    case 'RESTART_GAME': {
       return createInitialState(action.canvasWidth, action.canvasHeight);
+    }
 
     default:
       return state;

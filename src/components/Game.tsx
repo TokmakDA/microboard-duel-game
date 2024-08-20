@@ -1,7 +1,9 @@
-import { FC, useEffect, useRef, useState, useReducer } from 'react';
+import type { FC } from 'react';
+import { useEffect, useRef, useState, useReducer, useCallback } from 'react';
 import './Game.scss';
 import PlayersMenu from './PlayersMenu.tsx';
 import { createInitialState, gameReducer } from '../reducers/gameReducer.ts';
+
 interface GameProps {
   canvasWidth?: number;
   canvasHeight?: number;
@@ -35,17 +37,17 @@ const Game: FC<GameProps> = ({ canvasWidth = 800, canvasHeight = 800 }) => {
     context.closePath();
   };
 
-  const checkCollisionsWithMouse = () => {
+  const checkCollisionsWithMouse = useCallback(() => {
     if (mousePosition) {
       dispatch({ type: 'CHECK_MOUSE_COLLISION', mousePosition });
     }
-  };
+  }, [mousePosition]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas?.getContext('2d');
-    const width = canvas?.width || canvasWidth;
-    const height = canvas?.height || canvasHeight;
+    const width = canvas?.width ?? canvasWidth;
+    const height = canvas?.height ?? canvasHeight;
 
     let animationFrameId: number;
 
@@ -68,7 +70,7 @@ const Game: FC<GameProps> = ({ canvasWidth = 800, canvasHeight = 800 }) => {
         });
 
         // Рисуем заклинания
-        state.spells.forEach((spell) => {
+        Object.values(state.spells).forEach((spell) => {
           drawCircle(context, {
             x: spell.x,
             y: spell.y,
@@ -97,7 +99,15 @@ const Game: FC<GameProps> = ({ canvasWidth = 800, canvasHeight = 800 }) => {
     return () => {
       cancelAnimationFrame(animationFrameId);
     };
-  }, [canvasWidth, canvasHeight, state.players, state.spells]);
+  }, [
+    canvasWidth,
+    canvasHeight,
+    state.players,
+    state.spells,
+    state.baseInterval,
+    state.lastShootTime,
+    checkCollisionsWithMouse,
+  ]);
 
   // Эффект для отслеживания курсора
   useEffect(() => {
@@ -147,7 +157,8 @@ const Game: FC<GameProps> = ({ canvasWidth = 800, canvasHeight = 800 }) => {
           Player 1 <strong>vs</strong> Player 2
         </div>
         <div className="game__scoreboard-score">
-          {state.players['1'].score} <strong>:</strong> {state.players['2'].score}
+          {state.players['1'].score} <strong>:</strong>{' '}
+          {state.players['2'].score}
         </div>
       </div>
       <div className="game__container">
