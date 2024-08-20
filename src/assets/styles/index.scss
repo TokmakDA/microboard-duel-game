@@ -1,0 +1,20 @@
+@import 'reset';
+@import 'fonts';
+
+body {
+  width: 100%;
+  min-width: 320px;
+  max-width: 1920px;
+  min-height: 100vh;
+  margin: 0 auto;
+  font-family: $ff-main;
+  background-color: $background-color;
+  color: $text-color;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  display: flex;
+  flex: 1;
+}

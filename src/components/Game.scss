@@ -1,0 +1,79 @@
+.game {
+  text-align: center;
+  background-color: $canvas-background-color;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  max-width: 1000px;
+  width: 100%;
+  margin: 0 auto;
+
+  &__container {
+    margin: 0 auto;
+    display: inline-block;
+  }
+
+  &__canvas {
+    display: block;
+    background-color: $canvas-background-color;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+  }
+
+  &__title {
+    font-size: 2rem;
+    color: $title-color;
+    margin-bottom: 20px;
+  }
+
+  &__scoreboard {
+    @include flex-center;
+    flex-direction: column;
+    font-size: 1.5rem;
+    color: $text-color;
+    margin-top: 20px;
+    margin-bottom: 10px;
+
+    &-players {
+      margin-bottom: 10px;
+    }
+
+    &-score {
+      font-weight: bold;
+    }
+  }
+
+  &__player-controllers {
+    @include flex-center;
+    gap: 20px;
+    flex-direction: row;
+    margin-top: 20px;
+
+    &-player {
+      font-weight: bold;
+      font-size: 1rem;
+      margin-bottom: 8px;
+    }
+  }
+
+  &__restart-button {
+    background-color: $primary-color;
+    color: $white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: darken($primary-color, 10%);
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba($primary-color, 0.5);
+    }
+  }
+}
